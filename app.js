@@ -80,3 +80,21 @@ app.delete('/cards/:id', (req, res) => {
             res.status(500).json({ error: 'Could not delete the document' })
         })
 })
+
+app.patch('/cards/:id', (req, res) => {
+    const updates = req.body
+
+    if (!ObjectId.isValid(req.params.id)) {
+        res.status(500).json({ error: 'Invalid document ID' })
+        return;
+    }
+
+    db.collection('cards')
+        .updateOne({ _id: new ObjectId(req.params.id) }, { $set: updates })
+        .then(result => {
+            res.status(200).json(result)
+        })
+        .catch(() => {
+            res.status(500).json({ error: 'Could not update the document' })
+        })
+})
