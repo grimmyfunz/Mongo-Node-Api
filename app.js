@@ -1,11 +1,20 @@
 const express = require('express');
+const { connectToDb, getDb } = require('./db')
 
 // init app & middleware
 const app = express()
 
-app.listen(3000, () => {
-    console.log("app is listening on port 3000")
+// db connection
+let db;
+
+connectToDb((err) => {
+    if(err) return;
+    app.listen(3000, () => {
+        console.log("app is listening on port 3000")
+    })
+    db = getDb()
 })
+
 
 // routes
 app.get('/cards', (req, res) => {
