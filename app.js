@@ -8,7 +8,7 @@ const app = express()
 let db;
 
 connectToDb((err) => {
-    if(err) return;
+    if (err) return;
     app.listen(3000, () => {
         console.log("app is listening on port 3000")
     })
@@ -18,5 +18,16 @@ connectToDb((err) => {
 
 // routes
 app.get('/cards', (req, res) => {
-    res.json({mssg: "welcome to the api"})
+    let arr = []
+
+    db.collection('cards')
+        .find()
+        .sort({ author: 1 })
+        .forEach(element => arr.push(element))
+        .then(() => {
+            res.status(200).json(arr)
+        })
+        .catch(() => {
+            res.status(500).json({ error: 'Could not fetch the collection' })
+        })
 })
