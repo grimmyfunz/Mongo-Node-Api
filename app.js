@@ -63,3 +63,20 @@ app.post('/cards', (req, res) => {
             res.status(500).json({ error: 'Could not add new element' })
         })
 })
+
+app.delete('/cards/:id', (req, res) => {
+
+    if (!ObjectId.isValid(req.params.id)) {
+        res.status(500).json({ error: 'Invalid document ID' })
+        return;
+    }
+
+    db.collection('cards')
+        .deleteOne({ _id: new ObjectId(req.params.id) })
+        .then(result => {
+            res.status(200).json(result)
+        })
+        .catch(() => {
+            res.status(500).json({ error: 'Could not delete the document' })
+        })
+})
