@@ -4,6 +4,7 @@ const { ObjectId } = require('mongodb')
 
 // init app & middleware
 const app = express()
+app.use(express.json())
 
 // db connection
 let db;
@@ -47,5 +48,18 @@ app.get('/cards/:id', (req, res) => {
         })
         .catch(() => {
             res.status(500).json({ error: 'Could not fetch the document' })
+        })
+})
+
+app.post('/cards', (req, res) => {
+    const element = req.body
+
+    db.collection('cards')
+        .insertOne(element)
+        .then(result => {
+            res.status(201).json(element)
+        })
+        .catch(err => {
+            res.status(500).json({ error: 'Could not add new element' })
         })
 })
