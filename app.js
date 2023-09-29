@@ -20,11 +20,16 @@ connectToDb((err) => {
 
 // routes
 app.get('/cards', (req, res) => {
+    const page = req.query.p || 0
+    const elementsPerPage = 3
+
     let arr = []
 
     db.collection('cards')
         .find()
         .sort({ author: 1 })
+        .skip(page * elementsPerPage)
+        .limit(elementsPerPage)
         .forEach(element => arr.push(element))
         .then(() => {
             res.status(200).json(arr)
